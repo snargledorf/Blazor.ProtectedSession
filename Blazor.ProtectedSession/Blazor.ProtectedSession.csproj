@@ -14,11 +14,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" Version="10.0.7" />
-      <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.7" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
       <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.5.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.7" />
       <InternalsVisibleTo Include="Blazor.ProtectedSession.Tests" />
       <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     </ItemGroup>
