@@ -15,9 +15,9 @@
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
-      <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.5.0" />
-      <InternalsVisibleTo Include="Blazor.ProtectedSession.Tests" />
-      <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.5.0" />
+        <InternalsVisibleTo Include="Blazor.ProtectedSession.Tests" />
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
     </ItemGroup>
 
 </Project>
