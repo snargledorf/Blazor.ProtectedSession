@@ -4,6 +4,13 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Version>1.0.0</Version>
+        <Authors>Ryan Esteves</Authors>
+        <Description>A Blazor library for managed, protected session state using HybridCache and ProtectedBrowserStorage.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>blazor;session;cache;hybridcache;protectedstorage</PackageTags>
+        <RepositoryUrl>https://github.com/snargledorf/Blazor.ProtectedSession</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
