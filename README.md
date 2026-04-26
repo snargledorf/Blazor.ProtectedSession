@@ -22,6 +22,7 @@ By default, the library uses `LocalStorage` to persist the session ID and has a 
 
 ### 1. Register Services
 ```csharp
+builder.Services.AddHybridCache();
 builder.Services.AddProtectedSession(); 
 ```
 
