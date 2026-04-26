@@ -23,7 +23,7 @@ public static class ProtectedSessionServiceCollectionExtensions
 
         private void AddBrowserStorage()
         {
-            serviceCollection.AddSingleton<ISessionKeyLookup>(sp =>
+            serviceCollection.AddScoped<ISessionKeyLookup>(sp =>
             {
                 ProtectedSessionOptions protectedSessionOptions = sp.GetRequiredService<IOptions<ProtectedSessionOptions>>().Value;
 

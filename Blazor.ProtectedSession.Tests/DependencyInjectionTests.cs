@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
+using System.Text.Json;
 using NSubstitute;
 
 namespace Blazor.ProtectedSession.Tests;
@@ -35,6 +38,67 @@ public class DependencyInjectionTests
     }
 
     [Test]
+    public async Task ISessionKeyLookup_IsRegisteredAsScoped()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services.AddProtectedSession();
+
+        // Assert
+        var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(ISessionKeyLookup));
+        await Assert.That(descriptor).IsNotNull();
+        await Assert.That(descriptor!.Lifetime).IsEqualTo(ServiceLifetime.Scoped);
+    }
+
+    [Test]
+    public async Task ISessionKeyLookup_CanBeResolved_WithLocalStorage()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddProtectedSession(builder => builder.UseLocalStorage());
+        
+        services.AddSingleton(Substitute.For<IJSRuntime>());
+        services.AddSingleton(Substitute.For<IOptions<JsonSerializerOptions>>());
+        services.AddDataProtection();
+        services.AddScoped<ProtectedLocalStorage>();
+
+        var serviceProvider = services.BuildServiceProvider(true);
+        using var scope = serviceProvider.CreateScope();
+
+        // Act
+        var sessionKeyLookup = scope.ServiceProvider.GetService<ISessionKeyLookup>();
+
+        // Assert
+        await Assert.That(sessionKeyLookup).IsNotNull();
+        await Assert.That(sessionKeyLookup).IsTypeOf<SessionKeyLookup>();
+    }
+
+    [Test]
+    public async Task ISessionKeyLookup_CanBeResolved_WithSessionStorage()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddProtectedSession(builder => builder.UseSessionStorage());
+        
+        services.AddSingleton(Substitute.For<IJSRuntime>());
+        services.AddSingleton(Substitute.For<IOptions<JsonSerializerOptions>>());
+        services.AddDataProtection();
+        services.AddScoped<ProtectedSessionStorage>();
+
+        var serviceProvider = services.BuildServiceProvider(true);
+        using var scope = serviceProvider.CreateScope();
+
+        // Act
+        var sessionKeyLookup = scope.ServiceProvider.GetService<ISessionKeyLookup>();
+
+        // Assert
+        await Assert.That(sessionKeyLookup).IsNotNull();
+        await Assert.That(sessionKeyLookup).IsTypeOf<SessionKeyLookup>();
+    }
+
+    [Test]
     public async Task AddProtectedSession_WithConfiguration_ShouldApplyOptions()
     {
         // Arrange
@@ -51,7 +115,7 @@ public class DependencyInjectionTests
         });
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = services.BuildServiceProvider(true);
         var options = serviceProvider.GetRequiredService<IOptions<ProtectedSessionOptions>>().Value;
 
         await Assert.That(options.IdleTimeout).IsEqualTo(timeout);
@@ -69,7 +133,7 @@ public class DependencyInjectionTests
         services.AddProtectedSession(builder => builder.UseSessionStorage());
 
         // Assert
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = services.BuildServiceProvider(true);
         var options = serviceProvider.GetRequiredService<IOptions<ProtectedSessionOptions>>().Value;
 
         await Assert.That(options.StorageLocation).IsEqualTo(ProtectedStorageLocation.Session);
@@ -89,7 +153,7 @@ public class DependencyInjectionTests
         // which are sealed and hard to mock without a full Blazor environment.
         services.AddSingleton(Substitute.For<ISessionKeyLookup>());
 
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = services.BuildServiceProvider(true);
 
         // Act
         var protectedSession = serviceProvider.GetService<IProtectedSession>();
