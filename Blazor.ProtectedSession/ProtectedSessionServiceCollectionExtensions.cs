@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Blazor.ProtectedSession;
 
@@ -24,7 +25,7 @@ public static class ProtectedSessionServiceCollectionExtensions
         {
             serviceCollection.AddSingleton<ISessionKeyLookup>(sp =>
             {
-                var protectedSessionOptions = sp.GetRequiredService<ProtectedSessionOptions>();
+                ProtectedSessionOptions protectedSessionOptions = sp.GetRequiredService<IOptions<ProtectedSessionOptions>>().Value;
 
                 ProtectedBrowserStorage protectedBrowserStorage = protectedSessionOptions.StorageLocation switch
                 {
