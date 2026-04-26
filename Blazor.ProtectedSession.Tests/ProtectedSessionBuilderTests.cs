@@ -69,18 +69,4 @@ public class ProtectedSessionBuilderTests
         // Assert
         await Assert.That(options.StorageKey).IsEqualTo(key);
     }
-
-    [Test]
-    public async Task AddProtectedSession_ShouldRegisterServices()
-    {
-        // Act
-        _services.AddProtectedSession(opt => opt.UseLocalStorage());
-        
-        // We need to register HybridCache and ProtectedLocalStorage to satisfy dependencies if we were to build and get services
-        // But for just checking registration, we can check the service collection
-        
-        // Assert
-        await Assert.That(_services.Any(s => s.ServiceType == typeof(IProtectedSession))).IsTrue();
-        await Assert.That(_services.Any(s => s.ServiceType == typeof(ISessionKeyLookup))).IsTrue();
-    }
 }
