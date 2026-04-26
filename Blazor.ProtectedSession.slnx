@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Blazor.ProtectedSession.Tests/Blazor.ProtectedSession.Tests.csproj" />
   <Project Path="Blazor.ProtectedSession/Blazor.ProtectedSession.csproj" />
 </Solution>
